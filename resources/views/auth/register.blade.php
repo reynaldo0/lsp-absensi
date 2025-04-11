@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="flex h-screen">
+    <div class="flex h-auto">
         <!-- Left Pane -->
         <div class="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
             <div class="max-w-md text-center">
@@ -171,31 +171,36 @@
                         <label for="nisn" class="block text-sm font-medium text-gray-700">Nisn</label>
                         <input type="text" id="nisn" name="nisn"
                             class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
+                        <x-input-error :messages="$errors->get('nisn')" class="mt-2" />
                     </div>
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
                         <input type="text" id="name" name="name"
                             class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
+                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
                     <div>
                         <label for="username" class="block text-sm font-medium text-gray-700">Email</label>
                         <input type="text" id="email" name="email"
                             class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                         <input type="password" id="password" name="password"
                             class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Password
                             Confirmation</label>
                         <input type="password" id="password_confirmation" name="password_confirmation"
                             class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
+                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                     </div>
                     <div>
                         <button type="submit"
-                            class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300">Sign
+                            class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300">Sign
                             Up</button>
                     </div>
                 </form>

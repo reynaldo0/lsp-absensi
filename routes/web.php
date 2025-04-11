@@ -1,15 +1,16 @@
 <?php
 
+use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Guru\GuruDashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Siswa\SiswaDashboardController;
+use App\Http\Controllers\SiswaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -17,4 +18,23 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/absensi', [AbsensiController::class, 'index'])->name('admin.absensi');
+});
+
+Route::middleware(['auth', 'role:guru'])->group(function () {
+    Route::get('/guru/dashboard', [GuruDashboardController::class, 'index'])->name('guru.dashboard');
+
+    Route::get('/siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
+    Route::post('/siswa/store', [SiswaController::class, 'store'])->name('siswa.store');
+
+    Route::get('/guru/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
+    Route::post('/guru/absensi', [AbsensiController::class, 'store'])->name('absensi.store');
+});
+
+Route::middleware(['auth', 'role:siswa'])->group(function () {
+    Route::get('/siswa/dashboard', [SiswaDashboardController::class, 'index'])->name('siswa.dashboard');
+});
+
+require __DIR__ . '/auth.php';

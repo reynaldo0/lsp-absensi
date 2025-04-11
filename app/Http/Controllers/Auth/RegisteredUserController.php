@@ -34,6 +34,7 @@ class RegisteredUserController extends Controller
             'nisn' => ['required', 'integer', 'unique:users,nisn'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['nullable', 'in:admin,guru,siswa'],
         ]);
 
         $user = User::create([
@@ -41,6 +42,7 @@ class RegisteredUserController extends Controller
             'nisn' => $request->nisn,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role ?? 'siswa',
         ]);
 
         event(new Registered($user));

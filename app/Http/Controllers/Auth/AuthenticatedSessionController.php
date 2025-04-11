@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -24,11 +25,32 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $request->validate([
+            'nisn' => 'required|integer',
+            'password' => 'required',
+        ]);
+
+        if (! Auth::attempt(['nisn' => $request->nisn, 'password' => $request->password], $request->boolean('remember'))) {
+            throw ValidationException::withMessages([
+                'nisn' => __('auth.failed'),
+            ]);
+        }
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $role = auth()->user()->role;
+
+        switch ($role) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'guru':
+                return redirect()->route('guru.dashboard');
+            case 'siswa':
+                return redirect()->route('siswa.dashboard');
+            default:
+                Auth::logout();
+                abort(403, 'Role tidak dikenali.');
+        }
     }
 
     /**
