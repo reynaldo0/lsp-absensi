@@ -14,15 +14,38 @@ class AbsensiController extends Controller
      */
     public function index(Request $request)
     {
-        $tanggal = Carbon::now()->toDateString();
+        $periode = $request->get('periode', 1); // default 1 hari (hari ini)
+        $tanggalAwal = Carbon::now()->subDays($periode - 1)->startOfDay(); // contoh: 5 hari terakhir
+        $tanggalAkhir = Carbon::now()->endOfDay();
+
+        $kelasList = Siswa::select('kelas')->distinct()->pluck('kelas');
+        $kelasFilter = $request->get('kelas_filter');
+        $search = $request->get('search');
 
         $absensiHariIni = Absensi::with('siswa')
-            ->whereDate('tanggal', $tanggal)
+            ->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir])
+            ->whereHas('siswa') // biar data yang siswa-nya valid aja
+            ->when($kelasFilter, function ($query) use ($kelasFilter) {
+                $query->whereHas('siswa', function ($q) use ($kelasFilter) {
+                    $q->where('kelas', $kelasFilter);
+                });
+            })
+            ->when($search, function ($query) use ($search) {
+                $query->whereHas('siswa', function ($q) use ($search) {
+                    $q->where('nama', 'like', "%$search%")
+                        ->orWhere('nisn', 'like', "%$search%");
+                });
+            })
             ->get();
 
-        return view('pages.absensi.index', compact('absensiHariIni'));
+        return view('pages.absensi.index', compact(
+            'absensiHariIni',
+            'kelasList',
+            'periode',
+            'kelasFilter',
+            'search'
+        ));
     }
-
 
     public function store(Request $request)
     {
@@ -59,8 +82,6 @@ class AbsensiController extends Controller
     {
         $tanggal = now()->toDateString();
         $kelasFilter = $request->get('kelas_filter');
-
-        $kelasList = Siswa::select('kelas')->distinct()->pluck('kelas');
 
         $query = Siswa::orderBy('nama');
         if ($kelasFilter) {

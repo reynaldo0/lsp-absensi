@@ -9,6 +9,7 @@ class Siswa extends Model
     protected $fillable = [
         'nisn',
         'nama',
-        'kelas'
+        'kelas',
+        'jenis_kelamin',
     ];
 }

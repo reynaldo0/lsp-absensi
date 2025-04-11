@@ -9,24 +9,6 @@
             </div>
         @endif
 
-        <!-- Filter Form (GET) -->
-        <form method="GET" action="{{ route('absensi.index') }}" class="mb-4">
-            <div class="flex items-center gap-4 absolute">
-                <select name="periode" class="border rounded px-6 py-2 text-sm">
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                </select>
-                <select name="kelas_filter" onchange="this.form.submit()" class="border rounded px-6 py-2 text-sm">
-                    <option value="">Semua Kelas</option>
-                    @foreach ($kelasList as $kelas)
-                        <option value="{{ $kelas }}" {{ $kelasFilter == $kelas ? 'selected' : '' }}>
-                            {{ $kelas }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        </form>
-
         <!-- Form Absensi (POST) -->
         <form action="{{ route('absensi.store') }}" method="POST">
             @csrf
@@ -79,7 +61,7 @@
             </div>
         </form>
     </div>
-    
+
     <script>
         document.getElementById('select-all').addEventListener('change', function() {
             const checkboxes = document.querySelectorAll('.checkbox-siswa');

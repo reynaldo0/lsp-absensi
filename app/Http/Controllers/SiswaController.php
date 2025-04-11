@@ -27,12 +27,14 @@ class SiswaController extends Controller
             'nisn' => 'required|unique:siswas,nisn|max:20',
             'nama' => 'required|string|max:100',
             'kelas' => 'required|string|max:20',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
         ]);
 
         Siswa::create([
             'nisn' => $request->nisn,
             'nama' => $request->nama,
             'kelas' => $request->kelas,
+            'jenis_kelamin' => $request->jenis_kelamin,
         ]);
 
         return redirect()->back()->with('success', 'Data siswa berhasil ditambahkan.');
@@ -49,9 +51,15 @@ class SiswaController extends Controller
             'nisn' => 'required|unique:siswas,nisn,' . $siswa->id,
             'nama' => 'required',
             'kelas' => 'required',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
         ]);
 
-        $siswa->update($request->all());
+        $siswa->update([
+            'nisn' => $request->nisn,
+            'nama' => $request->nama,
+            'kelas' => $request->kelas,
+            'jenis_kelamin' => $request->jenis_kelamin,
+        ]);
 
         return redirect()->route('siswa.index')->with('success', 'Data berhasil diupdate');
     }

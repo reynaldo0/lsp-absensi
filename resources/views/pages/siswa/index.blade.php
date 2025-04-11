@@ -21,6 +21,7 @@
                         <th class="px-4 py-2 border">ID</th>
                         <th class="px-4 py-2 border">Nama</th>
                         <th class="px-4 py-2 border">Kelas</th>
+                        <th class="px-4 py-2 border">Kelamin</th>
                         <th class="px-4 py-2 border">Kontrol</th>
                     </tr>
                 </thead>
@@ -30,13 +31,19 @@
                             <td class="px-4 py-2 border">{{ $siswa->nisn }}</td>
                             <td class="px-4 py-2 border">{{ $siswa->nama }}</td>
                             <td class="px-4 py-2 border">{{ $siswa->kelas }}</td>
-                            <td class="px-4 py-2 border flex items-center gap-2">
-                                <a href="#" class="text-blue-500 hover:text-blue-700">⚙️</a>
-                                <form action="#" method="POST" onsubmit="return confirm('Yakin ingin hapus?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-700">❌</button>
-                                </form>
+                            <td class="px-4 py-2 border">{{ $siswa->jenis_kelamin }}</td>
+                            <td class="px-4 py-2 border">
+                                <div class="flex items-center gap-2">
+                                    <a href="{{ route('siswa.edit', $siswa->id) }}"
+                                        class="text-blue-500 hover:text-blue-700">⚙️</a>
+                                    <form action="{{ route('siswa.destroy', $siswa->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin hapus?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-700"
+                                            title="Hapus">❌</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -55,7 +62,8 @@
 
         <!-- Tombol tambah -->
         <div class="mt-4">
-            <a href="#" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">Tambah</a>
+            <a href="{{ route('siswa.create') }}"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">Tambah</a>
         </div>
 
         <!-- Footer -->

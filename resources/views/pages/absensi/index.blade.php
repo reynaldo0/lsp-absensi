@@ -12,20 +12,28 @@
         </a>
     </div>
 
-    <!-- Filter -->
-    <div class="flex flex-wrap items-center gap-4 mb-4">
-        <select class="border border-gray-300 rounded px-10 py-2 text-sm">
-            <option>10</option>
-            <option>11</option>
-            <option>12</option>
-        </select>
-        <select class="border border-gray-300 rounded px-10 py-2 text-sm">
-            <option>Semua Kelas</option>
-            <option>XI RPL</option>
-            <option>XII AK 1</option>
-        </select>
-        <input type="text" placeholder="Cari" class="border border-gray-300 rounded px-3 py-2 text-sm w-48 ml-auto" />
-    </div>
+    <!-- Filter Form (GET) -->
+    <form method="GET" action="{{ route('absensi.index') }}" class="mb-4">
+        <div class="flex gap-4 items-center">
+            <select name="periode" onchange="this.form.submit()" class="border rounded px-6 py-2 text-sm">
+                <option value="1" {{ request('periode') == 1 ? 'selected' : '' }}>Hari Ini</option>
+                <option value="5" {{ request('periode') == 5 ? 'selected' : '' }}>5 Hari</option>
+                <option value="6" {{ request('periode') == 6 ? 'selected' : '' }}>6 Hari</option>
+            </select>
+
+            <select name="kelas_filter" onchange="this.form.submit()" class="border rounded px-6 py-2 text-sm">
+                <option value="">Semua Kelas</option>
+                @foreach ($kelasList as $kelas)
+                    <option value="{{ $kelas }}" {{ $kelasFilter == $kelas ? 'selected' : '' }}>
+                        {{ $kelas }}
+                    </option>
+                @endforeach
+            </select>
+
+            <input type="text" name="search" placeholder="Cari NISN atau Nama" value="{{ request('search') }}"
+                class="border border-gray-300 rounded px-3 py-2 text-sm w-48 ml-auto" />
+        </div>
+    </form>
 
     <!-- Table -->
     <div class="overflow-x-auto bg-white rounded shadow">
