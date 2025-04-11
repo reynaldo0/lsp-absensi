@@ -11,11 +11,25 @@ class AbsensiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $siswa = Siswa::orderBy('nama')->get(); // Bisa difilter nanti
-        return view('pages.absensi.index', compact('siswa'));
+        $tanggal = now()->toDateString();
+        $kelasFilter = $request->get('kelas_filter');
+
+        $kelasList = Siswa::select('kelas')->distinct()->pluck('kelas');
+
+        $query = Siswa::orderBy('nama');
+        if ($kelasFilter) {
+            $query->where('kelas', $kelasFilter);
+        }
+
+        $siswa = $query->paginate(10)->appends(['kelas_filter' => $kelasFilter]);
+
+        $absenHariIni = Absensi::whereDate('tanggal', $tanggal)->get()->keyBy('siswa_id');
+
+        return view('pages.absensi.index', compact('siswa', 'absenHariIni', 'kelasFilter', 'kelasList'));
     }
+
 
     public function store(Request $request)
     {
@@ -24,17 +38,20 @@ class AbsensiController extends Controller
             'keterangan' => 'required|array',
         ]);
 
+        $tanggal = now()->toDateString();
+
         foreach ($request->siswa_id as $siswaId) {
-            if (isset($request->keterangan[$siswaId])) {
-                Absensi::create([
-                    'siswa_id' => $siswaId,
-                    'keterangan' => $request->keterangan[$siswaId],
-                    'tanggal' => now()->toDateString(),
-                ]);
+            $keterangan = $request->keterangan[$siswaId] ?? null;
+
+            if ($keterangan) {
+                Absensi::updateOrCreate(
+                    ['siswa_id' => $siswaId, 'tanggal' => $tanggal],
+                    ['keterangan' => $keterangan]
+                );
             }
         }
 
-        return redirect()->route('absensi.index')->with('success', 'Kehadiran berhasil disimpan!');
+        return redirect()->route('absensi.index')->with('success', 'Data kehadiran berhasil disimpan atau diperbarui.');
     }
 
     /**
