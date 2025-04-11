@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nisn')->unique();
             $table->string('nama');
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
             $table->string('kelas');
             $table->timestamps();
         });

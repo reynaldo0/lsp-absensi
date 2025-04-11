@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Absensi;
 use App\Models\Siswa;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AbsensiController extends Controller
@@ -13,21 +14,13 @@ class AbsensiController extends Controller
      */
     public function index(Request $request)
     {
-        $tanggal = now()->toDateString();
-        $kelasFilter = $request->get('kelas_filter');
+        $tanggal = Carbon::now()->toDateString();
 
-        $kelasList = Siswa::select('kelas')->distinct()->pluck('kelas');
+        $absensiHariIni = Absensi::with('siswa')
+            ->whereDate('tanggal', $tanggal)
+            ->get();
 
-        $query = Siswa::orderBy('nama');
-        if ($kelasFilter) {
-            $query->where('kelas', $kelasFilter);
-        }
-
-        $siswa = $query->paginate(10)->appends(['kelas_filter' => $kelasFilter]);
-
-        $absenHariIni = Absensi::whereDate('tanggal', $tanggal)->get()->keyBy('siswa_id');
-
-        return view('pages.absensi.index', compact('siswa', 'absenHariIni', 'kelasFilter', 'kelasList'));
+        return view('pages.absensi.index', compact('absensiHariIni'));
     }
 
 
@@ -51,24 +44,34 @@ class AbsensiController extends Controller
             }
         }
 
-        return redirect()->route('absensi.index')->with('success', 'Data kehadiran berhasil disimpan atau diperbarui.');
+        return redirect()->route('absensi.create')->with('success', 'Data kehadiran berhasil disimpan atau diperbarui.');
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
 
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function create(Request $request)
     {
-        //
+        $tanggal = now()->toDateString();
+        $kelasFilter = $request->get('kelas_filter');
+
+        $kelasList = Siswa::select('kelas')->distinct()->pluck('kelas');
+
+        $query = Siswa::orderBy('nama');
+        if ($kelasFilter) {
+            $query->where('kelas', $kelasFilter);
+        }
+
+        $siswa = $query->paginate(10)->appends(['kelas_filter' => $kelasFilter]);
+
+        $absenHariIni = Absensi::whereDate('tanggal', $tanggal)->get()->keyBy('siswa_id');
+
+        return view('pages.absensi.create', compact('siswa', 'absenHariIni', 'kelasFilter', 'kelasList'));
     }
 
     /**

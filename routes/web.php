@@ -26,10 +26,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:guru'])->group(function () {
     Route::get('/guru/dashboard', [GuruDashboardController::class, 'index'])->name('guru.dashboard');
 
-    Route::get('/siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
-    Route::post('/siswa/store', [SiswaController::class, 'store'])->name('siswa.store');
+    Route::get('/guru/siswa', [SiswaController::class, 'index'])->name('siswa.index');
+    Route::get('/guru/siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
+    Route::post('/guru/siswa/store', [SiswaController::class, 'store'])->name('siswa.store');
 
     Route::get('/guru/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
+    Route::get('/guru/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create');
     Route::post('/guru/absensi', [AbsensiController::class, 'store'])->name('absensi.store');
 });
 
