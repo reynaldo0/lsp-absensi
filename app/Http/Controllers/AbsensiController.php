@@ -92,7 +92,7 @@ class AbsensiController extends Controller
 
         $absenHariIni = Absensi::whereDate('tanggal', $tanggal)->get()->keyBy('siswa_id');
 
-        return view('pages.absensi.create', compact('siswa', 'absenHariIni', 'kelasFilter', 'kelasList'));
+        return view('pages.absensi.create', compact('siswa', 'absenHariIni', 'kelasFilter'));
     }
 
     /**

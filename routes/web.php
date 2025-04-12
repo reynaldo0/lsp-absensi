@@ -19,6 +19,20 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/absensi', [AbsensiController::class, 'index'])->name('admin.absensi');
+
+    Route::get('/admin/dashboard', [GuruDashboardController::class, 'index'])->name('admin.dashboard');
+
+    Route::get('/admin/siswa', [SiswaController::class, 'index'])->name('siswa.index');
+    Route::get('/admin/siswa/create', [SiswaController::class, 'create'])->name('siswa.create');
+    Route::post('/admin/siswa', [SiswaController::class, 'store'])->name('siswa.store');
+    Route::get('/admin/siswa/{siswa}/edit', [SiswaController::class, 'edit'])->name('siswa.edit');
+    Route::put('/admin/siswa/{siswa}', [SiswaController::class, 'update'])->name('siswa.update');
+    Route::delete('/admin/siswa/{siswa}', [SiswaController::class, 'destroy'])->name('siswa.destroy');
+
+
+    Route::get('/admin/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
+    Route::get('/admin/absensi/create', [AbsensiController::class, 'create'])->name('absensi.create');
+    Route::post('/admin/absensi', [AbsensiController::class, 'store'])->name('absensi.store');
 });
 
 Route::middleware(['auth', 'role:guru'])->group(function () {
@@ -37,6 +51,9 @@ Route::middleware(['auth', 'role:guru'])->group(function () {
     Route::post('/guru/absensi', [AbsensiController::class, 'store'])->name('absensi.store');
 });
 
-Route::middleware(['auth', 'role:siswa'])->group(function () {});
+Route::middleware(['auth', 'role:siswa'])->group(function () {
+    Route::get('/siswa/dashboard', [SiswaController::class, 'index'])->name('siswa.dashboard');
+
+});
 
 require __DIR__ . '/auth.php';

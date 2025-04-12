@@ -1,18 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Guru;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use App\Models\Siswa;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class GuruDashboardController extends Controller
+class AdminDashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $kelasList = Siswa::select('kelas')->distinct()->pluck('kelas');
@@ -56,7 +51,7 @@ class GuruDashboardController extends Controller
 
         $totalHariIni = Absensi::whereDate('created_at', '>=', $startDate)->count();
 
-        return view('pages.admin.dashboard', compact(
+        return view('pages.guru.dashboard', compact(
             'dataAbsensi',
             'kelasList',
             'kelasFilter',
@@ -66,54 +61,5 @@ class GuruDashboardController extends Controller
             'hadir',
             'totalHariIni'
         ));
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
