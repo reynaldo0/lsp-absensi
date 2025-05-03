@@ -9,41 +9,49 @@ use Illuminate\Http\Request;
 
 class AbsensiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $periode = $request->get('periode', 1); // default 1 hari (hari ini)
-        $tanggalAwal = Carbon::now()->subDays($periode - 1)->startOfDay(); // contoh: 5 hari terakhir
-        $tanggalAkhir = Carbon::now()->endOfDay();
+        $kelasList    = Siswa::select('kelas')->distinct()->pluck('kelas');
+        $kelasFilter  = $request->kelas_filter;
+        $search       = $request->search;
+        $periode      = $request->periode ?? 10;
+        $startDate    = now()->subDays($periode);
 
-        $kelasList = Siswa::select('kelas')->distinct()->pluck('kelas');
-        $kelasFilter = $request->get('kelas_filter');
-        $search = $request->get('search');
+        $query = Absensi::with('siswa')
+            ->whereDate('created_at', '>=', $startDate);
 
-        $absensiHariIni = Absensi::with('siswa')
-            ->whereBetween('tanggal', [$tanggalAwal, $tanggalAkhir])
-            ->whereHas('siswa') // biar data yang siswa-nya valid aja
-            ->when($kelasFilter, function ($query) use ($kelasFilter) {
-                $query->whereHas('siswa', function ($q) use ($kelasFilter) {
-                    $q->where('kelas', $kelasFilter);
-                });
-            })
-            ->when($search, function ($query) use ($search) {
-                $query->whereHas('siswa', function ($q) use ($search) {
-                    $q->where('nama', 'like', "%$search%")
-                        ->orWhere('nisn', 'like', "%$search%");
-                });
-            })
-            ->get();
+        if ($kelasFilter) {
+            $query->whereHas('siswa', function ($q) use ($kelasFilter) {
+                $q->where('kelas', $kelasFilter);
+            });
+        }
+
+        if ($search) {
+            $query->whereHas('siswa', function ($q) use ($search) {
+                $q->where('nama', 'like', "%$search%")
+                    ->orWhere('nisn', 'like', "%$search%");
+            });
+        }
+
+        $dataAbsensi = $query->latest()->get();
+
+        $terlambat     = Absensi::whereDate('created_at', '>=', $startDate)
+            ->where('keterangan', 'Terlambat')->count();
+
+        $hadir         = Absensi::whereDate('created_at', '>=', $startDate)
+            ->where('keterangan', 'Hadir')->count();
+
+        $totalHariIni  = Absensi::whereDate('created_at', '>=', $startDate)->count();
 
         return view('pages.absensi.index', compact(
-            'absensiHariIni',
+            'dataAbsensi',
             'kelasList',
-            'periode',
             'kelasFilter',
-            'search'
+            'search',
+            'periode',
+            'terlambat',
+            'hadir',
+            'totalHariIni'
         ));
     }
 
@@ -51,7 +59,7 @@ class AbsensiController extends Controller
     {
         $request->validate([
             'siswa_id' => 'required|array',
-            'keterangan' => 'required|array',
+            'keterangan' => 'required|array'
         ]);
 
         $tanggal = now()->toDateString();
@@ -67,17 +75,9 @@ class AbsensiController extends Controller
             }
         }
 
-        return redirect()->route('absensi.create')->with('success', 'Data kehadiran berhasil disimpan atau diperbarui.');
+        return redirect()->route('absensi.store')->with('susccess', 'data berhasil disimpan');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-
-
-    /**
-     * Display the specified resource.
-     */
     public function create(Request $request)
     {
         $tanggal = now()->toDateString();
@@ -95,27 +95,12 @@ class AbsensiController extends Controller
         return view('pages.absensi.create', compact('siswa', 'absenHariIni', 'kelasFilter'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        $data = Absensi::find($id);
+
+        $data->delete();
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus');
     }
 }

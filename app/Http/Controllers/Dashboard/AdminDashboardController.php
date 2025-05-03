@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
@@ -16,21 +17,17 @@ class AdminDashboardController extends Controller
         $search = $request->search;
         $periode = $request->periode ?? 10;
 
-        // Batas waktu periode
         $startDate = now()->subDays($periode);
 
-        // Query data absensi dalam rentang periode
         $query = Absensi::with('siswa')
             ->whereDate('created_at', '>=', $startDate);
 
-        // Filter kelas
         if ($kelasFilter) {
             $query->whereHas('siswa', function ($q) use ($kelasFilter) {
                 $q->where('kelas', $kelasFilter);
             });
         }
 
-        // Filter nama / nisn
         if ($search) {
             $query->whereHas('siswa', function ($q) use ($search) {
                 $q->where('nama', 'like', "%$search%")
@@ -40,7 +37,6 @@ class AdminDashboardController extends Controller
 
         $dataAbsensi = $query->latest()->get();
 
-        // Semua perhitungan pakai filter periode
         $terlambat = Absensi::whereDate('created_at', '>=', $startDate)
             ->where('keterangan', 'Terlambat')
             ->count();
@@ -51,7 +47,7 @@ class AdminDashboardController extends Controller
 
         $totalHariIni = Absensi::whereDate('created_at', '>=', $startDate)->count();
 
-        return view('pages.guru.dashboard', compact(
+        return view('pages.dashboard.admin', compact(
             'dataAbsensi',
             'kelasList',
             'kelasFilter',

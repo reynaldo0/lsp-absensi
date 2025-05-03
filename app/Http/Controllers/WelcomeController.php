@@ -4,28 +4,58 @@ namespace App\Http\Controllers;
 
 use App\Models\Absensi;
 use App\Models\Siswa;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class WelcomeController extends Controller
 {
     public function index(Request $request)
     {
-        $periode = $request->get('periode', 1);
-        $kelasFilter = $request->get('kelas_filter');
-        $search = $request->get('search');
-
-        $absensi = Absensi::with('siswa')
-            ->whereDate('tanggal', '>=', now()->subDays($periode - 1))
-            ->when($kelasFilter, fn($q) => $q->whereHas('siswa', fn($s) => $s->where('kelas', $kelasFilter)))
-            ->when($search, fn($q) => $q->whereHas(
-                'siswa',
-                fn($s) =>
-                $s->where('nama', 'like', "%$search%")->orWhere('nisn', 'like', "%$search%")
-            ))
-            ->get();
-
         $kelasList = Siswa::select('kelas')->distinct()->pluck('kelas');
 
-        return view('welcome', compact('absensi', 'kelasList', 'periode', 'kelasFilter', 'search'));
+        $kelasFilter = $request->kelas_filter;
+        $search = $request->search;
+        $periode = $request->periode ?? 10;
+
+        $startDate = now()->subDays($periode);
+
+        $query = Absensi::with('siswa')
+            ->whereDate('created_at', '>=', $startDate);
+
+        if ($kelasFilter) {
+            $query->whereHas('siswa', function ($q) use ($kelasFilter) {
+                $q->where('kelas', $kelasFilter);
+            });
+        }
+
+        if ($search) {
+            $query->whereHas('siswa', function ($q) use ($search) {
+                $q->where('nama', 'like', "%$search%")
+                    ->orWhere('nisn', 'like', "%$search%");
+            });
+        }
+
+        $dataAbsensi = $query->latest()->get();
+
+        $terlambat = Absensi::whereDate('created_at', '>=', $startDate)
+            ->where('keterangan', 'Terlambat')
+            ->count();
+
+        $hadir = Absensi::whereDate('created_at', '>=', $startDate)
+            ->where('keterangan', 'Hadir')
+            ->count();
+
+        $totalHariIni = Absensi::whereDate('created_at', '>=', $startDate)->count();
+
+        return view('welcome', compact(
+            'dataAbsensi',
+            'kelasList',
+            'kelasFilter',
+            'search',
+            'periode',
+            'terlambat',
+            'hadir',
+            'totalHariIni'
+        ));
     }
 }

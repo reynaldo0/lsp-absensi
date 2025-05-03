@@ -5,19 +5,19 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white p-6 rounded shadow text-center">
             <div class="text-sm text-gray-500 mb-1">Siswa Terlambat</div>
-            <div class="text-3xl font-bold text-gray-800">{{ $terlambat }}</div>
+            <div class="text-3xl font-bold text-gray-800">1</div>
         </div>
         <div class="bg-white p-6 rounded shadow text-center">
             <div class="text-sm text-gray-500 mb-1">Kehadiran Hari Ini</div>
-            <div class="text-3xl font-bold text-gray-800">{{ $hadir }}</div>
+            <div class="text-3xl font-bold text-gray-800">2</div>
         </div>
         <div class="bg-white p-6 rounded shadow text-center">
             <div class="text-sm text-gray-500 mb-1">Kehadiran Hari Ini</div>
-            <div class="text-3xl font-bold text-gray-800">{{ $totalHariIni }}</div>
+            <div class="text-3xl font-bold text-gray-800">34</div>
         </div>
     </div>
 
-    <form method="GET" action="{{ route('guru.dashboard') }}" class="mb-4">
+    <form method="GET" action="{{ route('siswa.dashboard') }}" class="mb-4">
         <div class="flex items-center gap-4">
             <select name="periode" onchange="this.form.submit()" class="...">
                 <option value="1" {{ request('periode') == 1 ? 'selected' : '' }}>Hari Ini</option>
@@ -57,8 +57,8 @@
                         <td class="px-4 py-2">{{ $absen->siswa->nama }}</td>
                         <td class="px-4 py-2">{{ $absen->siswa->kelas }}</td>
                         <td class="px-4 py-2">
-                            {{ in_array($absen->keterangan, ['Alpha', 'izin']) ? 'Tidak Hadir' : 'Hadir' }}</td>
-                        <td class="px-4 py-2">{{ $absen->keterangan ?? '-' }}</td>
+
+                        <td class="px-4 py-2"></td>
                     </tr>
                 @endforeach
             </tbody>

@@ -46,10 +46,11 @@
                     <th class="px-4 py-2 border-b">Kelas</th>
                     <th class="px-4 py-2 border-b">Status</th>
                     <th class="px-4 py-2 border-b">Keterangan</th>
+                    <th class="px-4 py-2 border-b">Act</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($absensiHariIni as $absen)
+                @forelse ($dataAbsensi as $absen)
                     <tr class="border-t">
                         <td class="px-4 py-2">{{ $absen->siswa->nisn ?? '-' }}</td>
                         <td class="px-4 py-2">{{ $absen->siswa->nama ?? '-' }}</td>
@@ -57,6 +58,18 @@
                         <td class="px-4 py-2">{{ $absen->siswa->kelas ?? '-' }}</td>
                         <td class="px-4 py-2">{{ $absen->keterangan === 'Alpha' ? 'Tidak Hadir' : 'Hadir' }}</td>
                         <td class="px-4 py-2">{{ $absen->keterangan ?? '-' }}</td>
+                        <td class="px-4 py-2">
+                            <form action="{{ route('absensi.destroy', $absen->id) }}" method="POST" class="inline-block"
+                                onsubmit="return confirm('Yakin ingin hapus?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none">
+                                    Hapus
+                                </button>
+                            </form>
+                        </td>
+
                     </tr>
                 @empty
                     <tr>

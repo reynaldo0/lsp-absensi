@@ -27,11 +27,11 @@
                 <select name="jenis_kelamin" id="jenis_kelamin"
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                     <option value="">-- Pilih Jenis Kelamin --</option>
-                    <option value="Laki-laki"
-                        {{ old('jenis_kelamin', $siswa->jenis_kelamin) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki
+                    <option value="laki"
+                        {{ old('jenis_kelamin', $siswa->jenis_kelamin) == 'laki' ? 'selected' : '' }}>Laki-laki
                     </option>
-                    <option value="Perempuan"
-                        {{ old('jenis_kelamin', $siswa->jenis_kelamin) == 'Perempuan' ? 'selected' : '' }}>Perempuan
+                    <option value="perempuan"
+                        {{ old('jenis_kelamin', $siswa->jenis_kelamin) == 'perempuan' ? 'selected' : '' }}>Perempuan
                     </option>
                 </select>
             </div>

@@ -169,10 +169,10 @@
                     @csrf
                     <!-- Your form elements go here -->
                     <div>
-                        <label for="nisn" class="block text-sm font-medium text-gray-700">Nisn</label>
-                        <input type="text" id="nisn" name="nisn"
+                        <label for="nip" class="block text-sm font-medium text-gray-700">NIP</label>
+                        <input type="text" id="nip" name="nip"
                             class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300">
-                        <x-input-error :messages="$errors->get('nisn')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('nip')" class="mt-2" />
                     </div>
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>

@@ -11,9 +11,10 @@ class SiswaController extends Controller
     {
         $perPage = $request->input('perPage', 5);
 
-        $siswas = Siswa::paginate($perPage);
+        $siswa = Siswa::paginate($perPage)->appends(request()->query());
 
-        return view('pages.siswa.index', compact('siswas', 'perPage'));
+
+        return view('pages.siswa.index', compact('siswa', 'perPage'));
     }
 
     public function create()
@@ -27,7 +28,7 @@ class SiswaController extends Controller
             'nisn' => 'required|unique:siswas,nisn|max:20',
             'nama' => 'required|string|max:100',
             'kelas' => 'required|string|max:20',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'jenis_kelamin' => 'required|in:laki,perempuan',
         ]);
 
         Siswa::create([
@@ -51,7 +52,7 @@ class SiswaController extends Controller
             'nisn' => 'required|unique:siswas,nisn,' . $siswa->id,
             'nama' => 'required',
             'kelas' => 'required',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'jenis_kelamin' => 'required|in:laki,perempuan',
         ]);
 
         $siswa->update([

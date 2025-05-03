@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <form method="GET" action="{{ route('guru.dashboard') }}" class="mb-4">
+    <form method="GET" action="{{ route('admin.dashboard') }}" class="mb-4">
         <div class="flex items-center gap-4">
             <select name="periode" onchange="this.form.submit()" class="...">
                 <option value="1" {{ request('periode') == 1 ? 'selected' : '' }}>Hari Ini</option>
@@ -56,8 +56,23 @@
                         <td class="px-4 py-2">{{ $absen->siswa->nisn }}</td>
                         <td class="px-4 py-2">{{ $absen->siswa->nama }}</td>
                         <td class="px-4 py-2">{{ $absen->siswa->kelas }}</td>
+
                         <td class="px-4 py-2">
-                            {{ in_array($absen->keterangan, ['Alpha', 'izin']) ? 'Tidak Hadir' : 'Hadir' }}</td>
+                            <span
+                                class="px-2 py-1 rounded text-white text-xs font-semibold
+        @if ($absen->keterangan === 'Alpha') bg-red-500
+        @elseif ($absen->keterangan === 'Izin')
+            bg-yellow-500
+        @else
+            bg-green-500 @endif">
+                                @if ($absen->keterangan === 'Alpha')
+                                    Tidak Hadir
+                                @elseif ($absen->keterangan === 'Izin')
+                                    Izin
+                                @else
+                                    Hadir
+                                @endif
+                            </span>
                         <td class="px-4 py-2">{{ $absen->keterangan ?? '-' }}</td>
                     </tr>
                 @endforeach

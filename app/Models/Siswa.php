@@ -6,10 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Siswa extends Model
 {
-    protected $fillable = [
-        'nisn',
-        'nama',
-        'kelas',
-        'jenis_kelamin',
-    ];
+    protected $guarded = ['id'];
+
+    public function absensis()
+    {
+        return $this->hasMany(Absensi::class);
+    }
+    public function selfies()
+    {
+        return $this->hasMany(Selfie::class);
+    }
 }

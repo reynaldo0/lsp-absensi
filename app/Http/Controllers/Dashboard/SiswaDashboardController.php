@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
+use App\Models\Absensi;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 
 class SiswaDashboardController extends Controller
@@ -38,26 +41,14 @@ class SiswaDashboardController extends Controller
 
         $dataAbsensi = $query->latest()->get();
 
-        // Semua perhitungan pakai filter periode
-        $terlambat = Absensi::whereDate('created_at', '>=', $startDate)
-            ->where('keterangan', 'Terlambat')
-            ->count();
-
-        $hadir = Absensi::whereDate('created_at', '>=', $startDate)
-            ->where('keterangan', 'Hadir')
-            ->count();
-
         $totalHariIni = Absensi::whereDate('created_at', '>=', $startDate)->count();
 
-        return view('pages.guru.dashboard', compact(
+        return view('pages.dashboard.siswa', compact(
             'dataAbsensi',
             'kelasList',
             'kelasFilter',
             'search',
             'periode',
-            'terlambat',
-            'hadir',
-            'totalHariIni'
         ));
     }
 }

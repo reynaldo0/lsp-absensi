@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -18,10 +17,9 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create()
+    public function create(): View
     {
-        $siswaList = Siswa::all();
-        return view('auth.register', compact('siswaList'));
+        return view('auth.register');
     }
 
     /**
@@ -33,15 +31,15 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'nisn' => ['required', 'integer', 'unique:users,nisn'],
+            'nip' => ['required', 'integer', 'unique:users,nip'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['nullable', 'in:admin,guru,siswa'],
+            'role' => ['nullable', 'in:admin,siswa'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
-            'nisn' => $request->nisn,
+            'nip' => $request->nip,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role ?? 'siswa',
@@ -54,8 +52,6 @@ class RegisteredUserController extends Controller
         switch ($user->role) {
             case 'admin':
                 return redirect()->route('admin.dashboard');
-            case 'guru':
-                return redirect()->route('guru.dashboard');
             default:
                 return redirect()->route('siswa.dashboard');
         }

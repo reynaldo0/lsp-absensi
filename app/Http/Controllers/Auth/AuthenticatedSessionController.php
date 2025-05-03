@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use Dotenv\Exception\ValidationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -26,13 +26,13 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->validate([
-            'nisn' => 'required|integer',
+            'nip' => 'required|integer',
             'password' => 'required',
         ]);
 
-        if (! Auth::attempt(['nisn' => $request->nisn, 'password' => $request->password], $request->boolean('remember'))) {
+        if (! Auth::attempt(['nip' => $request->nip, 'password' => $request->password], $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'nisn' => __('auth.failed'),
+                'nip' => __('auth.failed'),
             ]);
         }
 
@@ -43,8 +43,6 @@ class AuthenticatedSessionController extends Controller
         switch ($role) {
             case 'admin':
                 return redirect()->route('admin.dashboard');
-            case 'guru':
-                return redirect()->route('guru.dashboard');
             case 'siswa':
                 return redirect()->route('siswa.dashboard');
             default:
@@ -52,6 +50,7 @@ class AuthenticatedSessionController extends Controller
                 abort(403, 'Role tidak dikenali.');
         }
     }
+
 
     /**
      * Destroy an authenticated session.
