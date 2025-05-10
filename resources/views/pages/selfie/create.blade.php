@@ -71,13 +71,11 @@
                 alert("Kamera tidak dapat diakses. Pastikan kamera tersedia.");
             });
 
-        // Ambil Lokasi dan tampilkan peta
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(pos => {
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
 
-                // Tampilkan lokasi di form
                 latitudeInput.value = lat;
                 longitudeInput.value = lon;
 
