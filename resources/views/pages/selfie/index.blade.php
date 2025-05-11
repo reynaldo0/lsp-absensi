@@ -62,7 +62,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Leaflet map (for displaying the map)
             var map = L.map('map').setView([0, 0], 13); // Set initial view to coordinates (0, 0)
 
             // Add tile layer to map
