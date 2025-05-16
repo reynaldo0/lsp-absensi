@@ -5,7 +5,7 @@
         <!-- Page Header -->
         <div class="text-center mb-10">
             <h1 class="text-4xl font-bold text-gray-900 mb-4">Absensi Selfie</h1>
-            <p class="text-lg text-gray-600">Lihat data absensi selfie siswa dengan keterangan, lokasi, dan selfie
+            <p class="text-lg text-gray-600">Lihat data absensi siswa dengan keterangan, lokasi, dan selfie
                 masing-masing.</p>
         </div>
 
