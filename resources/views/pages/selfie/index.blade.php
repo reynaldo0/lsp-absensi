@@ -9,7 +9,6 @@
                 masing-masing.</p>
         </div>
 
-        <!-- Table Section -->
         <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
             <table class="table-auto w-full text-sm text-gray-800">
                 <thead class="bg-gray-100 text-gray-600">
@@ -54,7 +53,6 @@
             </table>
         </div>
 
-        <!-- Map Section -->
         <div class="mt-12 bg-gray-100 p-6 rounded-lg shadow-lg">
             <div id="map" style="height: 400px;" class="rounded-lg"></div>
         </div>
