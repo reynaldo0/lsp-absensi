@@ -62,7 +62,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             var map = L.map('map').setView([0, 0], 13); // Set initial view to coordinates (0, 0)
 
-            // Add tile layer to map
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
             // Initialize geocoder
